@@ -22,7 +22,7 @@ import com.maiphong.quizapplication.services.QuizService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("api/v1/quizzes")
+@RequestMapping("api/manager/quizzes")
 public class QuizController {
     private final QuizService quizService;
 
