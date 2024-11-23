@@ -1,5 +1,6 @@
 package com.maiphong.quizapplication.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,6 +71,7 @@ public class QuizServiceImpl implements QuizService {
         newQuiz.setDescription(quizCreateDTO.getDescription());
         newQuiz.setDuration(quizCreateDTO.getDuration());
         newQuiz.setActive(quizCreateDTO.isActive());
+        newQuiz.setCreateAt(LocalDateTime.now());
 
         newQuiz = quizRepository.save(newQuiz);
 
@@ -93,6 +95,7 @@ public class QuizServiceImpl implements QuizService {
         updateQuiz.setDescription(quizEditDTO.getDescription());
         updateQuiz.setDuration(quizEditDTO.getDuration());
         updateQuiz.setActive(quizEditDTO.isActive());
+        updateQuiz.setUpdateAt(LocalDateTime.now());
 
         updateQuiz = quizRepository.save(updateQuiz);
 
