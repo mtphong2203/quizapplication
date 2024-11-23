@@ -3,9 +3,9 @@ package com.maiphong.quizapplication.services;
 import java.util.List;
 import java.util.UUID;
 
-import com.maiphong.quizapplication.dtos.QuizCreateDTO;
-import com.maiphong.quizapplication.dtos.QuizDTO;
-import com.maiphong.quizapplication.dtos.QuizEditDTO;
+import com.maiphong.quizapplication.dtos.quiz.QuizCreateDTO;
+import com.maiphong.quizapplication.dtos.quiz.QuizDTO;
+import com.maiphong.quizapplication.dtos.quiz.QuizEditDTO;
 
 public interface QuizService {
     List<QuizDTO> getAll();

@@ -1,5 +1,6 @@
 package com.maiphong.quizapplication.entities;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -16,7 +17,7 @@ import lombok.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "quizzes")
-public class Quiz extends EntityBase {
+public class Quiz {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -30,5 +31,14 @@ public class Quiz extends EntityBase {
 
     @Column(name = "duration", nullable = false)
     private double duration;
+
+    @Column(name = "create_at", unique = true, nullable = false)
+    private LocalDateTime createAt;
+
+    @Column(name = "update_at", unique = true)
+    private LocalDateTime updateAt;
+
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive;
 
 }

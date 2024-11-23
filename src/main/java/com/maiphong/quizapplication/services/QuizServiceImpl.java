@@ -7,9 +7,9 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.maiphong.quizapplication.dtos.QuizCreateDTO;
-import com.maiphong.quizapplication.dtos.QuizDTO;
-import com.maiphong.quizapplication.dtos.QuizEditDTO;
+import com.maiphong.quizapplication.dtos.quiz.QuizCreateDTO;
+import com.maiphong.quizapplication.dtos.quiz.QuizDTO;
+import com.maiphong.quizapplication.dtos.quiz.QuizEditDTO;
 import com.maiphong.quizapplication.entities.Quiz;
 import com.maiphong.quizapplication.exceptions.ResourceNotFoundException;
 import com.maiphong.quizapplication.repositories.QuizRepository;

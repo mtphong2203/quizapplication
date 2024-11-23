@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.maiphong.quizapplication.dtos.QuizCreateDTO;
-import com.maiphong.quizapplication.dtos.QuizDTO;
-import com.maiphong.quizapplication.dtos.QuizEditDTO;
+import com.maiphong.quizapplication.dtos.quiz.QuizCreateDTO;
+import com.maiphong.quizapplication.dtos.quiz.QuizDTO;
+import com.maiphong.quizapplication.dtos.quiz.QuizEditDTO;
 import com.maiphong.quizapplication.services.QuizService;
 
 import jakarta.validation.Valid;
