@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.maiphong.quizapplication.config.mappers.QuestionMapper;
 import com.maiphong.quizapplication.dtos.question.QuestionCreateDTO;
 import com.maiphong.quizapplication.dtos.question.QuestionDTO;
 import com.maiphong.quizapplication.dtos.question.QuestionEditDTO;
@@ -19,9 +20,11 @@ import com.maiphong.quizapplication.repositories.QuestionRepository;
 public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
+    private final QuestionMapper questionMapper;
 
-    public QuestionServiceImpl(QuestionRepository questionRepository) {
+    public QuestionServiceImpl(QuestionRepository questionRepository, QuestionMapper questionMapper) {
         this.questionRepository = questionRepository;
+        this.questionMapper = questionMapper;
     }
 
     @Override
@@ -29,12 +32,7 @@ public class QuestionServiceImpl implements QuestionService {
         List<Question> questions = questionRepository.findAll();
 
         List<QuestionDTO> questionDTOs = questions.stream().map(question -> {
-            QuestionDTO questionDTO = new QuestionDTO();
-
-            questionDTO.setId(question.getId());
-            questionDTO.setContent(question.getContent());
-            questionDTO.setQuestionType(question.getQuestionType());
-            questionDTO.setActive(question.isActive());
+            QuestionDTO questionDTO = questionMapper.toQuestionDTO(question);
 
             return questionDTO;
         }).toList();
@@ -49,12 +47,7 @@ public class QuestionServiceImpl implements QuestionService {
         if (question == null) {
             throw new ResourceNotFoundException("Quetion is not found");
         }
-        QuestionDTO questionDTO = new QuestionDTO();
-
-        questionDTO.setId(question.getId());
-        questionDTO.setContent(question.getContent());
-        questionDTO.setQuestionType(question.getQuestionType());
-        questionDTO.setActive(question.isActive());
+        QuestionDTO questionDTO = questionMapper.toQuestionDTO(question);
 
         return questionDTO;
     }
@@ -65,10 +58,7 @@ public class QuestionServiceImpl implements QuestionService {
             throw new IllegalArgumentException("Question should not be null");
         }
 
-        Question question = new Question();
-        question.setContent(questionCreateDTO.getContent());
-        question.setQuestionType(questionCreateDTO.getQuestionType());
-        question.setActive(questionCreateDTO.isActive());
+        Question question = questionMapper.toQuestion(questionCreateDTO);
         question.setCreateAt(LocalDateTime.now());
 
         question = questionRepository.save(question);
