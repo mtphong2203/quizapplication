@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.maiphong.quizapplication.config.mappers.QuizMapper;
 import com.maiphong.quizapplication.dtos.quiz.QuizCreateDTO;
 import com.maiphong.quizapplication.dtos.quiz.QuizDTO;
 import com.maiphong.quizapplication.dtos.quiz.QuizEditDTO;
@@ -18,9 +19,11 @@ import com.maiphong.quizapplication.repositories.QuizRepository;
 @Transactional
 public class QuizServiceImpl implements QuizService {
     private final QuizRepository quizRepository;
+    private final QuizMapper quizMapper;
 
-    public QuizServiceImpl(QuizRepository quizRepository) {
+    public QuizServiceImpl(QuizRepository quizRepository, QuizMapper quizMapper) {
         this.quizRepository = quizRepository;
+        this.quizMapper = quizMapper;
     }
 
     @Override
@@ -28,13 +31,7 @@ public class QuizServiceImpl implements QuizService {
         List<Quiz> quizzes = quizRepository.findAll();
         // convert dto to show view
         List<QuizDTO> quizDTOs = quizzes.stream().map(quiz -> {
-            QuizDTO quizDTO = new QuizDTO();
-            quizDTO.setId(quiz.getId());
-            quizDTO.setTitle(quiz.getTitle());
-            quizDTO.setDescription(quiz.getDescription());
-            quizDTO.setDuration(quiz.getDuration());
-            quizDTO.setActive(quiz.isActive());
-
+            QuizDTO quizDTO = quizMapper.toQuizDTO(quiz);
             return quizDTO;
         }).toList();
 
@@ -49,12 +46,7 @@ public class QuizServiceImpl implements QuizService {
             throw new ResourceNotFoundException("Quiz is not found");
         }
 
-        QuizDTO quizDTO = new QuizDTO();
-        quizDTO.setId(quiz.getId());
-        quizDTO.setTitle(quiz.getTitle());
-        quizDTO.setDescription(quiz.getDescription());
-        quizDTO.setDuration(quiz.getDuration());
-        quizDTO.setActive(quiz.isActive());
+        QuizDTO quizDTO = quizMapper.toQuizDTO(quiz);
 
         return quizDTO;
 
@@ -66,11 +58,8 @@ public class QuizServiceImpl implements QuizService {
             throw new IllegalArgumentException("Quiz create should not empty");
         }
 
-        Quiz newQuiz = new Quiz();
-        newQuiz.setTitle(quizCreateDTO.getTitle());
-        newQuiz.setDescription(quizCreateDTO.getDescription());
-        newQuiz.setDuration(quizCreateDTO.getDuration());
-        newQuiz.setActive(quizCreateDTO.isActive());
+        Quiz newQuiz = quizMapper.toQuiz(quizCreateDTO);
+
         newQuiz.setCreateAt(LocalDateTime.now());
 
         newQuiz = quizRepository.save(newQuiz);
