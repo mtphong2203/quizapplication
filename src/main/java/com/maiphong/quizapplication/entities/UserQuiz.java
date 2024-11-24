@@ -1,6 +1,7 @@
 package com.maiphong.quizapplication.entities;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,16 +14,15 @@ import lombok.*;
 @Table(name = "user_quiz")
 public class UserQuiz {
 
-    @EmbeddedId
-    private UserQuizId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("userId")
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("quizId")
     @JoinColumn(name = "quiz_id", referencedColumnName = "id")
     private Quiz quiz;
 

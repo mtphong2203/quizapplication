@@ -1,13 +1,8 @@
 package com.maiphong.quizapplication.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.Table;
+import java.util.UUID;
+
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
@@ -18,16 +13,15 @@ import lombok.*;
 @Table(name = "quiz_question")
 public class QuizQuestion {
 
-    @EmbeddedId
-    private QuizQuestionId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("questionId")
     @JoinColumn(name = "question_id", referencedColumnName = "id")
     private Question question;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("quizId")
     @JoinColumn(name = "quiz_id", referencedColumnName = "id")
     private Quiz quiz;
 
