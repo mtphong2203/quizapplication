@@ -1,6 +1,7 @@
-package com.maiphong.quizapplication.config.mappers;
+package com.maiphong.quizapplication.mappers;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
 import com.maiphong.quizapplication.dtos.quiz.QuizCreateDTO;
 import com.maiphong.quizapplication.dtos.quiz.QuizDTO;
@@ -14,6 +15,6 @@ public interface QuizMapper {
 
     Quiz toQuiz(QuizCreateDTO quizCreateDTO);
 
-    Quiz toQuiz(QuizEditDTO quizEditDTO);
+    Quiz toQuiz(QuizEditDTO quizEditDTO, @MappingTarget Quiz quiz);
 
 }

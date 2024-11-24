@@ -7,12 +7,12 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.maiphong.quizapplication.config.mappers.QuestionMapper;
 import com.maiphong.quizapplication.dtos.question.QuestionCreateDTO;
 import com.maiphong.quizapplication.dtos.question.QuestionDTO;
 import com.maiphong.quizapplication.dtos.question.QuestionEditDTO;
 import com.maiphong.quizapplication.entities.Question;
 import com.maiphong.quizapplication.exceptions.ResourceNotFoundException;
+import com.maiphong.quizapplication.mappers.QuestionMapper;
 import com.maiphong.quizapplication.repositories.QuestionRepository;
 
 @Service
@@ -77,9 +77,8 @@ public class QuestionServiceImpl implements QuestionService {
         if (question == null) {
             throw new ResourceNotFoundException("Question is not found");
         }
-        question.setContent(questionEditDTO.getContent());
-        question.setQuestionType(questionEditDTO.getQuestionType());
-        question.setActive(questionEditDTO.isActive());
+
+        questionMapper.toQuestion(questionEditDTO, question);
         question.setUpdateAt(LocalDateTime.now());
 
         question = questionRepository.save(question);

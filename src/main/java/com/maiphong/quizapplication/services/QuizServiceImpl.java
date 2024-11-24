@@ -7,12 +7,12 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.maiphong.quizapplication.config.mappers.QuizMapper;
 import com.maiphong.quizapplication.dtos.quiz.QuizCreateDTO;
 import com.maiphong.quizapplication.dtos.quiz.QuizDTO;
 import com.maiphong.quizapplication.dtos.quiz.QuizEditDTO;
 import com.maiphong.quizapplication.entities.Quiz;
 import com.maiphong.quizapplication.exceptions.ResourceNotFoundException;
+import com.maiphong.quizapplication.mappers.QuizMapper;
 import com.maiphong.quizapplication.repositories.QuizRepository;
 
 @Service
@@ -80,10 +80,7 @@ public class QuizServiceImpl implements QuizService {
             throw new ResourceNotFoundException("Quiz is not found");
         }
 
-        updateQuiz.setTitle(quizEditDTO.getTitle());
-        updateQuiz.setDescription(quizEditDTO.getDescription());
-        updateQuiz.setDuration(quizEditDTO.getDuration());
-        updateQuiz.setActive(quizEditDTO.isActive());
+        quizMapper.toQuiz(quizEditDTO, updateQuiz);
         updateQuiz.setUpdateAt(LocalDateTime.now());
 
         updateQuiz = quizRepository.save(updateQuiz);
