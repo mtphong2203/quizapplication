@@ -1,5 +1,6 @@
 package com.maiphong.quizapplication.entities;
 
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -34,4 +35,7 @@ public class User {
 
     @Column(name = "password")
     private String password;
+
+    @ManyToMany(mappedBy = "users")
+    private List<Role> roles;
 }

@@ -1,5 +1,6 @@
 package com.maiphong.quizapplication.entities;
 
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -24,4 +25,8 @@ public class Role {
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(referencedColumnName = "id"))
+    private List<User> users;
 }
