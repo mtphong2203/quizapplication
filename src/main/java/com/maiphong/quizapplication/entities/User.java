@@ -38,4 +38,7 @@ public class User {
 
     @ManyToMany(mappedBy = "users")
     private List<Role> roles;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserQuiz> users;
 }
