@@ -43,4 +43,7 @@ public class Question {
     @OneToMany(mappedBy = "question")
     private List<Answer> answers;
 
+    @OneToMany(mappedBy = "question")
+    private List<QuizQuestion> questions;
+
 }
