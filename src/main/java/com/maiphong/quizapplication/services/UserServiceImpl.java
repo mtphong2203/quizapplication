@@ -3,6 +3,7 @@ package com.maiphong.quizapplication.services;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,12 +18,14 @@ import com.maiphong.quizapplication.repositories.UserRepository;
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
-    private UserMapper userMapper;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -58,6 +61,7 @@ public class UserServiceImpl implements UserService {
         }
 
         User newUser = userMapper.toUser(userCreateDTO);
+        newUser.setPassword(passwordEncoder.encode(userCreateDTO.getPassword()));
 
         newUser = userRepository.save(newUser);
 
@@ -78,6 +82,7 @@ public class UserServiceImpl implements UserService {
         }
 
         userMapper.toUser(userEditDTO, user);
+        user.setPassword(passwordEncoder.encode(userEditDTO.getPassword()));
 
         user = userRepository.save(user);
 
