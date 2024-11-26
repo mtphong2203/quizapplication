@@ -52,7 +52,7 @@ public class SecurityConfiguration {
                 .addFilterBefore(corsFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JWTFilter(tokenService), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/api/auth/**").permitAll() // permit all request to /api/auth/**
+                        .requestMatchers("/api/manager/**").permitAll() // permit all request to /api/auth/**
                         .requestMatchers("/swagger-ui/**").permitAll() // permit all request to /swagger-ui/**
                         .requestMatchers("/api/categories/**").hasAnyRole("ADMIN", "USER")
                         // /api/categories/**
