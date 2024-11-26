@@ -3,31 +3,31 @@ package com.maiphong.quizapplication.controllers;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.*;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.maiphong.quizapplication.dtos.quiz.QuizCreateDTO;
 import com.maiphong.quizapplication.dtos.quiz.QuizDTO;
 import com.maiphong.quizapplication.dtos.quiz.QuizEditDTO;
+import com.maiphong.quizapplication.dtos.quiz.QuizSearchDTO;
 import com.maiphong.quizapplication.services.QuizService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("api/manager/quizzes")
 public class QuizController {
     private final QuizService quizService;
+    private final PagedResourcesAssembler<QuizDTO> pagedResourcesAssembler;
 
-    public QuizController(QuizService quizService) {
+    public QuizController(QuizService quizService, PagedResourcesAssembler<QuizDTO> pagedResourcesAssembler) {
         this.quizService = quizService;
+        this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
     @GetMapping
@@ -91,5 +91,30 @@ public class QuizController {
         }
 
         return ResponseEntity.ok(isDeleted);
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<?> search(@RequestBody QuizSearchDTO quizSearchDTO) {
+        Pageable pageable = PageRequest.of(quizSearchDTO.getPage(), quizSearchDTO.getSize());
+
+        var quizPageDTO = quizService.search(quizSearchDTO.getKeyword(), pageable);
+
+        var pageModel = pagedResourcesAssembler.toModel(quizPageDTO);
+
+        return ResponseEntity.ok(pageModel);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> search(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "2") Integer size) {
+        // Check sort order
+        Pageable pageable = PageRequest.of(page, size);
+
+        // Search category by keyword and paging
+        var quizzes = quizService.search(keyword, pageable);
+
+        return ResponseEntity.ok(quizzes);
     }
 }

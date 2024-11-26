@@ -4,6 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -100,6 +104,26 @@ public class QuizServiceImpl implements QuizService {
         quizRepository.delete(quiz);
 
         return !quizRepository.existsById(id);
+    }
+
+    @Override
+    public Page<QuizDTO> search(String keyword, Pageable pageable) {
+        Specification<Quiz> spec = (root, query, criteriaBuilder) -> {
+            if (keyword == null) {
+                return null;
+            }
+
+            return criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), "%" + keyword.toLowerCase() + "%");
+        };
+
+        Page<Quiz> quizPage = quizRepository.findAll(spec, pageable);
+
+        Page<QuizDTO> quizPageDTO = quizPage.map(quiz -> {
+            QuizDTO quizDTO = quizMapper.toQuizDTO(quiz);
+            return quizDTO;
+        });
+
+        return quizPageDTO;
     }
 
 }
