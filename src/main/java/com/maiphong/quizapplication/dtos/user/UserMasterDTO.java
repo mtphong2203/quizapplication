@@ -1,6 +1,6 @@
 package com.maiphong.quizapplication.dtos.user;
 
-import com.maiphong.quizapplication.dtos.BaseDTO;
+import com.maiphong.quizapplication.dtos.MasterDTO;
 
 import lombok.*;
 
@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO extends BaseDTO {
+public class UserMasterDTO extends MasterDTO {
     private String firstName;
 
     private String lastName;

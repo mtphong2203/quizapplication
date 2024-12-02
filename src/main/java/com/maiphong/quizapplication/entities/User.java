@@ -1,44 +1,38 @@
 package com.maiphong.quizapplication.entities;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Set;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User {
+public class User extends EntityMaster {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-
-    @Column(name = "first_name", nullable = false)
+    @Column(columnDefinition = "NVARCHAR(30)", nullable = false)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false)
+    @Column(columnDefinition = "NVARCHAR(30)", nullable = false)
     private String lastName;
 
-    @Column(name = "username", nullable = false)
+    @Column(columnDefinition = "NVARCHAR(30)", nullable = false, unique = true)
     private String username;
 
-    @Column(name = "email", nullable = false)
+    @Column(columnDefinition = "NVARCHAR(50)", nullable = false)
     private String email;
 
-    @Column(name = "avatar")
+    @Column(nullable = false, unique = true)
+    private String phoneNumber;
+
+    @Column(nullable = false)
     private String thumbnailUrl;
 
-    @Column(name = "password")
+    @Column(nullable = false)
     private String password;
 
     @ManyToMany(mappedBy = "users")
-    private List<Role> roles;
-
-    @OneToMany(mappedBy = "user")
-    private List<UserQuiz> users;
+    private Set<Role> roles;
 }

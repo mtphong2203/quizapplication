@@ -3,18 +3,24 @@ package com.maiphong.quizapplication.services;
 import java.util.List;
 import java.util.UUID;
 
-import com.maiphong.quizapplication.dtos.user.UserCreateDTO;
-import com.maiphong.quizapplication.dtos.user.UserDTO;
-import com.maiphong.quizapplication.dtos.user.UserEditDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.maiphong.quizapplication.dtos.user.UserCreateEditDTO;
+import com.maiphong.quizapplication.dtos.user.UserMasterDTO;
 
 public interface UserService {
-    List<UserDTO> getAll();
+    List<UserMasterDTO> getAll();
 
-    UserDTO getById(UUID id);
+    List<UserMasterDTO> searchByKeyword(String keyword);
 
-    boolean create(UserCreateDTO userCreateDTO);
+    Page<UserMasterDTO> search(String keyword, Pageable pageable);
 
-    boolean update(UserEditDTO userEditDTO);
+    UserMasterDTO getById(UUID id);
+
+    UserMasterDTO create(UserCreateEditDTO userDTO);
+
+    UserMasterDTO update(UUID id, UserCreateEditDTO userDTO);
 
     boolean delete(UUID id);
 }
