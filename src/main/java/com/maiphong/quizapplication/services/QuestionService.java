@@ -3,18 +3,27 @@ package com.maiphong.quizapplication.services;
 import java.util.List;
 import java.util.UUID;
 
-import com.maiphong.quizapplication.dtos.question.QuestionCreateDTO;
-import com.maiphong.quizapplication.dtos.question.QuestionDTO;
-import com.maiphong.quizapplication.dtos.question.QuestionEditDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.maiphong.quizapplication.dtos.question.QuestionCreateEditDTO;
+import com.maiphong.quizapplication.dtos.question.QuestionMasterDTO;
+import com.maiphong.quizapplication.entities.QuestionType;
 
 public interface QuestionService {
-    List<QuestionDTO> getAll();
+    List<QuestionMasterDTO> getAll();
 
-    QuestionDTO getById(UUID id);
+    List<QuestionMasterDTO> searchByContent(String keyword);
 
-    boolean create(QuestionCreateDTO questionCreateDTO);
+    List<QuestionMasterDTO> searchByType(QuestionType type);
 
-    boolean update(QuestionEditDTO questionEditDTO);
+    Page<QuestionMasterDTO> searchPage(String keyword, Pageable pageable);
+
+    QuestionMasterDTO getById(UUID id);
+
+    QuestionMasterDTO create(QuestionCreateEditDTO questionDTO);
+
+    QuestionMasterDTO update(UUID id, QuestionCreateEditDTO questionEditDTO);
 
     boolean delete(UUID id);
 }

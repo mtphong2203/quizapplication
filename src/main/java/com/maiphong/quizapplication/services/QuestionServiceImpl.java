@@ -4,13 +4,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.maiphong.quizapplication.dtos.question.QuestionCreateDTO;
-import com.maiphong.quizapplication.dtos.question.QuestionDTO;
-import com.maiphong.quizapplication.dtos.question.QuestionEditDTO;
+import com.maiphong.quizapplication.dtos.question.QuestionCreateEditDTO;
+import com.maiphong.quizapplication.dtos.question.QuestionMasterDTO;
 import com.maiphong.quizapplication.entities.Question;
+import com.maiphong.quizapplication.entities.QuestionType;
 import com.maiphong.quizapplication.exceptions.ResourceNotFoundException;
 import com.maiphong.quizapplication.mappers.QuestionMapper;
 import com.maiphong.quizapplication.repositories.QuestionRepository;
@@ -28,62 +31,58 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<QuestionDTO> getAll() {
+    public List<QuestionMasterDTO> getAll() {
         List<Question> questions = questionRepository.findAll();
 
-        List<QuestionDTO> questionDTOs = questions.stream().map(question -> {
-            QuestionDTO questionDTO = questionMapper.toQuestionDTO(question);
+        List<QuestionMasterDTO> QuestionMasterDTOs = questions.stream().map(question -> {
+            QuestionMasterDTO QuestionMasterDTO = questionMapper.toMasterDTO(question);
 
-            return questionDTO;
+            return QuestionMasterDTO;
         }).toList();
 
-        return questionDTOs;
+        return QuestionMasterDTOs;
     }
 
     @Override
-    public QuestionDTO getById(UUID id) {
+    public QuestionMasterDTO getById(UUID id) {
         Question question = questionRepository.findById(id).orElse(null);
 
         if (question == null) {
-            throw new ResourceNotFoundException("Quetion is not found");
+            throw new ResourceNotFoundException("Question is not found");
         }
-        QuestionDTO questionDTO = questionMapper.toQuestionDTO(question);
+        QuestionMasterDTO QuestionMasterDTO = questionMapper.toMasterDTO(question);
 
-        return questionDTO;
+        return QuestionMasterDTO;
     }
 
     @Override
-    public boolean create(QuestionCreateDTO questionCreateDTO) {
-        if (questionCreateDTO == null) {
+    public QuestionMasterDTO create(QuestionCreateEditDTO questionDTO) {
+        if (questionDTO == null) {
             throw new IllegalArgumentException("Question should not be null");
         }
 
-        Question question = questionMapper.toQuestion(questionCreateDTO);
-        question.setCreateAt(LocalDateTime.now());
-
+        Question question = questionMapper.toEntity(questionDTO);
         question = questionRepository.save(question);
 
-        return question != null;
+        return questionMapper.toMasterDTO(question);
     }
 
     @Override
-    public boolean update(QuestionEditDTO questionEditDTO) {
-        if (questionEditDTO == null) {
+    public QuestionMasterDTO update(UUID id, QuestionCreateEditDTO questionDTO) {
+        if (questionDTO == null) {
             throw new IllegalArgumentException("Question should not be null");
         }
 
-        Question question = questionRepository.findById(questionEditDTO.getId()).orElse(null);
+        Question question = questionRepository.findById(id).orElse(null);
 
         if (question == null) {
             throw new ResourceNotFoundException("Question is not found");
         }
 
-        questionMapper.toQuestion(questionEditDTO, question);
-        question.setUpdateAt(LocalDateTime.now());
-
+        questionMapper.toEntity(questionDTO, question);
         question = questionRepository.save(question);
 
-        return question != null;
+        return questionMapper.toMasterDTO(question);
     }
 
     @Override
@@ -98,4 +97,63 @@ public class QuestionServiceImpl implements QuestionService {
         return !questionRepository.existsById(id);
     }
 
+    @Override
+    public List<QuestionMasterDTO> searchByContent(String keyword) {
+        Specification<Question> spec = (root, _, cb) -> {
+            if (keyword == null) {
+                return null;
+            }
+
+            return cb.like(cb.lower(root.get("content")), "%" + keyword.toLowerCase() + "%");
+        };
+
+        List<Question> questions = questionRepository.findAll(spec);
+
+        List<QuestionMasterDTO> masterDTOs = questions.stream().map(question -> {
+            QuestionMasterDTO masterDTO = questionMapper.toMasterDTO(question);
+            return masterDTO;
+        }).toList();
+
+        return masterDTOs;
+    }
+
+    @Override
+    public Page<QuestionMasterDTO> searchPage(String keyword, Pageable pageable) {
+        Specification<Question> spec = (root, _, cb) -> {
+            if (keyword == null) {
+                return null;
+            }
+
+            return cb.like(cb.lower(root.get("content")), "%" + keyword.toLowerCase() + "%");
+        };
+
+        Page<Question> questions = questionRepository.findAll(spec, pageable);
+
+        Page<QuestionMasterDTO> masterDTOs = questions.map(question -> {
+            QuestionMasterDTO masterDTO = questionMapper.toMasterDTO(question);
+            return masterDTO;
+        });
+
+        return masterDTOs;
+    }
+
+    @Override
+    public List<QuestionMasterDTO> searchByType(QuestionType type) {
+        Specification<Question> spec = (root, _, cb) -> {
+            if (type == null) {
+                return null;
+            }
+
+            return cb.equal(root.get("type"), type);
+        };
+
+        List<Question> questions = questionRepository.findAll(spec);
+
+        List<QuestionMasterDTO> masterDTOs = questions.stream().map(question -> {
+            QuestionMasterDTO masterDTO = questionMapper.toMasterDTO(question);
+            return masterDTO;
+        }).toList();
+
+        return masterDTOs;
+    }
 }
