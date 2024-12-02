@@ -3,18 +3,19 @@ package com.maiphong.quizapplication.services;
 import java.util.List;
 import java.util.UUID;
 
-import com.maiphong.quizapplication.dtos.role.RoleCreateDTO;
-import com.maiphong.quizapplication.dtos.role.RoleDTO;
-import com.maiphong.quizapplication.dtos.role.RoleEditDTO;
+import com.maiphong.quizapplication.dtos.role.RoleCreateEditDTO;
+import com.maiphong.quizapplication.dtos.role.RoleMasterDTO;
 
 public interface RoleService {
-    List<RoleDTO> getAll();
+    List<RoleMasterDTO> getAll();
 
-    RoleDTO getById(UUID id);
+    List<RoleMasterDTO> searchByName(String keyword);
 
-    boolean create(RoleCreateDTO roleCreateDTO);
+    RoleMasterDTO getById(UUID id);
 
-    boolean update(RoleEditDTO roleEditDTO);
+    RoleMasterDTO create(RoleCreateEditDTO roleDTO);
+
+    RoleMasterDTO update(UUID id, RoleCreateEditDTO roleDTO);
 
     boolean delete(UUID id);
 }

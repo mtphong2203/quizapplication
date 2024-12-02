@@ -1,32 +1,23 @@
 package com.maiphong.quizapplication.entities;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.Set;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "roles")
-public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+public class Role extends EntityMaster {
 
-    @Column(name = "name", nullable = false)
+    @Column(columnDefinition = "NVARCHAR(50)", unique = true, nullable = false)
     private String name;
 
-    @Column(name = "description", nullable = false)
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String description;
 
-    @Column(name = "is_active", nullable = false)
-    private boolean isActive;
-
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(referencedColumnName = "id"))
-    private List<User> users;
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> users;
 }

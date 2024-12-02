@@ -1,6 +1,6 @@
 package com.maiphong.quizapplication.dtos.role;
 
-import com.maiphong.quizapplication.dtos.BaseDTO;
+import com.maiphong.quizapplication.dtos.MasterDTO;
 
 import lombok.*;
 
@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoleDTO extends BaseDTO {
+public class RoleMasterDTO extends MasterDTO {
 
     private String name;
 

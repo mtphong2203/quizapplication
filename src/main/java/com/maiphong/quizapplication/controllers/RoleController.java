@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,12 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.maiphong.quizapplication.dtos.role.RoleCreateDTO;
-import com.maiphong.quizapplication.dtos.role.RoleDTO;
-import com.maiphong.quizapplication.dtos.role.RoleEditDTO;
+import com.maiphong.quizapplication.dtos.role.RoleCreateEditDTO;
+import com.maiphong.quizapplication.dtos.role.RoleMasterDTO;
 import com.maiphong.quizapplication.services.RoleService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("api/manager/roles")
@@ -29,8 +32,8 @@ public class RoleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RoleDTO>> getAll() {
-        List<RoleDTO> roleDTOs = roleService.getAll();
+    public ResponseEntity<List<RoleMasterDTO>> getAll() {
+        List<RoleMasterDTO> roleDTOs = roleService.getAll();
 
         if (roleDTOs == null) {
             return ResponseEntity.notFound().build();
@@ -39,9 +42,18 @@ public class RoleController {
         return ResponseEntity.ok(roleDTOs);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<RoleMasterDTO>> search(@RequestParam(required = false) String keyword) {
+        List<RoleMasterDTO> roleDTOs = roleService.searchByName(keyword);
+        if (roleDTOs == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(roleDTOs);
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<RoleDTO> getById(@PathVariable UUID id) {
-        RoleDTO roleDTO = roleService.getById(id);
+    public ResponseEntity<RoleMasterDTO> getById(@PathVariable UUID id) {
+        RoleMasterDTO roleDTO = roleService.getById(id);
 
         if (roleDTO == null) {
             return ResponseEntity.notFound().build();
@@ -50,26 +62,27 @@ public class RoleController {
         return ResponseEntity.ok(roleDTO);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody RoleCreateDTO roleCreateDTO) {
-        boolean isCreated = roleService.create(roleCreateDTO);
-
-        if (!isCreated) {
-            return ResponseEntity.badRequest().body(isCreated);
+    @PostMapping
+    public ResponseEntity<?> create(@Valid @RequestBody RoleCreateEditDTO roleDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
 
-        return ResponseEntity.status(201).body(isCreated);
+        var masterDTOs = roleService.create(roleDTO);
+
+        return ResponseEntity.ok(masterDTOs);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> update(@RequestBody RoleEditDTO roleEditDTO) {
-        boolean isUpdated = roleService.update(roleEditDTO);
-
-        if (!isUpdated) {
-            return ResponseEntity.badRequest().body(isUpdated);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable UUID id, @Valid @RequestBody RoleCreateEditDTO roleDTO,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
 
-        return ResponseEntity.ok(isUpdated);
+        var masterDTOs = roleService.update(id, roleDTO);
+
+        return ResponseEntity.ok(masterDTOs);
     }
 
     @DeleteMapping("/{id}")
