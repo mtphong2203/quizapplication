@@ -56,7 +56,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/swagger-ui/**").permitAll() // permit all request to /swagger-ui/**
                         .requestMatchers("/api/categories/**").hasAnyRole("ADMIN", "USER")
                         // /api/categories/**
-                        .anyRequest().authenticated())
+                        .anyRequest().anonymous())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }

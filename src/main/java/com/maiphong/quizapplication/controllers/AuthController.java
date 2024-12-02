@@ -5,6 +5,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,23 +13,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.maiphong.quizapplication.dtos.auth.LoginRequestDTO;
 import com.maiphong.quizapplication.dtos.auth.LoginResponseDTO;
-import com.maiphong.quizapplication.dtos.user.UserCreateDTO;
+import com.maiphong.quizapplication.dtos.auth.RegisterRequestDTO;
 import com.maiphong.quizapplication.services.AuthService;
 import com.maiphong.quizapplication.services.TokenService;
 import com.maiphong.quizapplication.services.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("api/manager/auth")
 public class AuthController {
-
-    private final UserService userService;
     private final AuthService authService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenService tokenService;
 
     public AuthController(UserService userService, AuthService authService,
             AuthenticationManagerBuilder authenticationManagerBuilder, TokenService tokenService) {
-        this.userService = userService;
         this.authService = authService;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.tokenService = tokenService;
@@ -52,15 +52,14 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Boolean> register(@RequestBody UserCreateDTO userCreateDTO) {
-        if (authService.existByUsername(userCreateDTO.getUsername())) {
-            return ResponseEntity.badRequest().body(false);
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDTO registerDTO,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
+        var result = authService.register(registerDTO);
 
-        boolean isCreated = userService.create(userCreateDTO);
-
-        return ResponseEntity.ok(isCreated);
-
+        return ResponseEntity.ok(result);
     }
 
 }

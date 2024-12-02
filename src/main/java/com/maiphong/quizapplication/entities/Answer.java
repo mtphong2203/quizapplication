@@ -1,29 +1,17 @@
 package com.maiphong.quizapplication.entities;
 
-import java.util.UUID;
-
 import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "answers")
-public class Answer {
+public class Answer extends EntityMaster {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-
-    @Column(name = "content", nullable = false)
+    @Column(columnDefinition = "NVARCHAR(50)", nullable = false)
     private String content;
 
-    @Column(name = "is_correct", nullable = false)
+    @Column(nullable = false)
     private boolean isCorrect;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id", referencedColumnName = "id")
-    private Question question;
 }

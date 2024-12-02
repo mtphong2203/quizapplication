@@ -1,5 +1,8 @@
 package com.maiphong.quizapplication.dtos.question;
 
+import com.maiphong.quizapplication.dtos.MasterCreateEditDTO;
+import com.maiphong.quizapplication.entities.QuestionType;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -7,13 +10,11 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class QuestionCreateDTO {
+public class QuestionCreateEditDTO extends MasterCreateEditDTO {
+
     @NotNull(message = "Content should not be null")
     private String content;
 
     @NotNull(message = "Question type should be appear")
-    private String questionType;
-
-    @NotNull(message = "Active should not be null")
-    private boolean isActive;
+    private QuestionType type;
 }
