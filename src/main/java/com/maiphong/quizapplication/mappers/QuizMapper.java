@@ -1,20 +1,23 @@
 package com.maiphong.quizapplication.mappers;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.ReportingPolicy;
 
-import com.maiphong.quizapplication.dtos.quiz.QuizCreateDTO;
+import com.maiphong.quizapplication.dtos.quiz.QuizCreateEditDTO;
 import com.maiphong.quizapplication.dtos.quiz.QuizDTO;
-import com.maiphong.quizapplication.dtos.quiz.QuizEditDTO;
+import com.maiphong.quizapplication.dtos.quiz.QuizMasterDTO;
 import com.maiphong.quizapplication.entities.Quiz;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface QuizMapper {
 
-    QuizDTO toQuizDTO(Quiz quiz);
+    Quiz toEntity(QuizCreateEditDTO DTO);
 
-    Quiz toQuiz(QuizCreateDTO quizCreateDTO);
+    Quiz toEntity(QuizCreateEditDTO DTO, @MappingTarget Quiz quiz);
 
-    Quiz toQuiz(QuizEditDTO quizEditDTO, @MappingTarget Quiz quiz);
+    QuizMasterDTO toMasterDTO(Quiz quiz);
 
+    QuizDTO toDTO(Quiz quiz);
 }
