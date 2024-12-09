@@ -16,5 +16,4 @@ public class QuizMasterDTO extends MasterDTO {
 
     private double duration;
 
-    private boolean isActive;
 }

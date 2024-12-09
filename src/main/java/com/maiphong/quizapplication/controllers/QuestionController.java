@@ -1,5 +1,6 @@
 package com.maiphong.quizapplication.controllers;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -8,6 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Links;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.maiphong.quizapplication.dtos.question.QuestionCreateEditDTO;
 import com.maiphong.quizapplication.dtos.question.QuestionMasterDTO;
 import com.maiphong.quizapplication.entities.QuestionType;
+import com.maiphong.quizapplication.mappers.CustomPageData;
 import com.maiphong.quizapplication.services.QuestionService;
 
 import jakarta.validation.Valid;
@@ -86,7 +90,15 @@ public class QuestionController {
 
         Page<QuestionMasterDTO> questions = questionService.searchPage(keyword, pageable);
 
-        return ResponseEntity.ok(pageMaster.toModel(questions));
+        var pageModel = pageMaster.toModel(questions);
+
+        Collection<EntityModel<QuestionMasterDTO>> data = pageModel.getContent();
+
+        Links links = pageModel.getLinks();
+
+        var response = new CustomPageData<EntityModel<QuestionMasterDTO>>(data, pageModel.getMetadata(), links);
+
+        return ResponseEntity.ok(response);
 
     }
 

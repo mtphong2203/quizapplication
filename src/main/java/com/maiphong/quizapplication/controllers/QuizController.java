@@ -1,16 +1,20 @@
 package com.maiphong.quizapplication.controllers;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.*;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Links;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import com.maiphong.quizapplication.dtos.quiz.QuizCreateEditDTO;
 import com.maiphong.quizapplication.dtos.quiz.QuizMasterDTO;
+import com.maiphong.quizapplication.mappers.CustomPageData;
 import com.maiphong.quizapplication.services.QuizService;
 
 import jakarta.validation.Valid;
@@ -58,9 +62,17 @@ public class QuizController {
             pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
         }
 
-        Page<QuizMasterDTO> questions = quizService.search(keyword, pageable);
+        Page<QuizMasterDTO> quizzes = quizService.search(keyword, pageable);
 
-        return ResponseEntity.ok(pagedResourcesAssembler.toModel(questions));
+        var pageModel = pagedResourcesAssembler.toModel(quizzes);
+
+        Collection<EntityModel<QuizMasterDTO>> data = pageModel.getContent();
+
+        Links links = pageModel.getLinks();
+
+        var response = new CustomPageData<EntityModel<QuizMasterDTO>>(data, pageModel.getMetadata(), links);
+
+        return ResponseEntity.ok(response);
 
     }
 

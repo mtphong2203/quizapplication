@@ -1,5 +1,5 @@
 package com.maiphong.quizapplication.entities;
 
 public enum QuestionType {
-    TRUE_FALSE, SELECTED, MULTIPLECHOICE, FILL_IN_BLANK, MATCHING
+    TRUE_FALSE, SELECTED, MULTIPLE_CHOICE, FILL_IN_BLANK, MATCHING
 }

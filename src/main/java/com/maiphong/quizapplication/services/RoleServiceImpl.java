@@ -5,12 +5,16 @@ import java.util.UUID;
 
 import javax.swing.text.html.HTMLDocument.HTMLReader.SpecialAction;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.maiphong.quizapplication.dtos.role.RoleCreateEditDTO;
 import com.maiphong.quizapplication.dtos.role.RoleMasterDTO;
+import com.maiphong.quizapplication.dtos.role.RoleMasterDTO;
+import com.maiphong.quizapplication.entities.Role;
 import com.maiphong.quizapplication.entities.Role;
 import com.maiphong.quizapplication.exceptions.ResourceNotFoundException;
 import com.maiphong.quizapplication.mappers.RoleMapper;
@@ -117,6 +121,26 @@ public class RoleServiceImpl implements RoleService {
         }).toList();
 
         return masterDTOs;
+    }
+
+    @Override
+    public Page<RoleMasterDTO> search(String keyword, Pageable pageable) {
+        Specification<Role> spec = (root, _, cb) -> {
+            if (keyword == null) {
+                return null;
+            }
+
+            return cb.like(cb.lower(root.get("name")), "%" + keyword.toLowerCase() + "%");
+        };
+
+        Page<Role> roles = roleRepository.findAll(spec, pageable);
+
+        Page<RoleMasterDTO> roleDTOS = roles.map(role -> {
+            RoleMasterDTO roleDTO = roleMapper.toMasterDTO(role);
+            return roleDTO;
+        });
+
+        return roleDTOS;
     }
 
 }
