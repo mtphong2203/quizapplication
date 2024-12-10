@@ -1,5 +1,7 @@
 package com.maiphong.quizapplication.entities;
 
+import java.util.Set;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,4 +16,13 @@ public class Question extends EntityMaster {
 
     @Column(nullable = false)
     private QuestionType type;
+
+    @OneToMany(mappedBy = "question")
+    private Set<Answer> answers;
+
+    @OneToMany(mappedBy = "question")
+    private Set<QuizQuestion> quizQuestions;
+
+    @OneToMany(mappedBy = "question")
+    private Set<UserAnswer> userAnswers;
 }
