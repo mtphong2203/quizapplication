@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.maiphong.quizapplication.dtos.auth.RegisterRequestDTO;
+import com.maiphong.quizapplication.dtos.user.UserInformationDTO;
 import com.maiphong.quizapplication.entities.User;
 import com.maiphong.quizapplication.mappers.UserMapper;
 import com.maiphong.quizapplication.repositories.UserRepository;
@@ -73,6 +74,23 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
 
         return user.getId();
 
+    }
+
+    @Override
+    public UserInformationDTO getUserInformation(String username) {
+        var user = userRepository.findByUsername(username);
+        UserInformationDTO userInformationDTO = new UserInformationDTO();
+        userInformationDTO.setFirstName(user.getFirstName());
+        userInformationDTO.setLastName(user.getLastName());
+        userInformationDTO.setDisplayName(user.getDisplayName());
+        userInformationDTO.setUsername(user.getUsername());
+        userInformationDTO.setEmail(user.getEmail());
+        userInformationDTO.setPhoneNumber(user.getPhoneNumber());
+        userInformationDTO.setThumbnailUrl(user.getThumbnailUrl());
+        var roles = user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toSet());
+        userInformationDTO.setRoles(roles);
+
+        return userInformationDTO;
     }
 
 }

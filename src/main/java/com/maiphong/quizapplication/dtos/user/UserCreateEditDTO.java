@@ -1,5 +1,7 @@
 package com.maiphong.quizapplication.dtos.user;
 
+import java.util.UUID;
+
 import org.hibernate.validator.constraints.Length;
 
 import com.maiphong.quizapplication.dtos.MasterCreateEditDTO;
@@ -33,5 +35,7 @@ public class UserCreateEditDTO extends MasterCreateEditDTO {
 
     @NotNull(message = "Password should not be null")
     private String password;
+
+    private UUID roleId;
 
 }

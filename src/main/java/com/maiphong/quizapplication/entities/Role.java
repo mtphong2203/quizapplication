@@ -17,7 +17,6 @@ public class Role extends EntityMaster {
     @Column(columnDefinition = "NVARCHAR(255)")
     private String description;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 }

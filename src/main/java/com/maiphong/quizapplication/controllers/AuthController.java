@@ -44,9 +44,11 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String accessToken = tokenService.generateAccessToken(authentication);
+        var userInformation = authService.getUserInformation(loginRequestDTO.getUsername());
 
         LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
         loginResponseDTO.setAccessToken(accessToken);
+        loginResponseDTO.setUserInformationDTO(userInformation);
 
         return ResponseEntity.ok(loginResponseDTO);
     }

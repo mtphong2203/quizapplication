@@ -17,6 +17,9 @@ public class User extends EntityMaster {
     @Column(columnDefinition = "NVARCHAR(30)", nullable = false)
     private String lastName;
 
+    @Transient
+    private String displayName;
+
     @Column(columnDefinition = "NVARCHAR(30)", nullable = false, unique = true)
     private String username;
 
@@ -32,7 +35,8 @@ public class User extends EntityMaster {
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
     @OneToMany(mappedBy = "user")
@@ -40,4 +44,8 @@ public class User extends EntityMaster {
 
     @OneToMany(mappedBy = "user")
     private Set<UserAnswer> userAnswers;
+
+    public String getDisplayName() {
+        return this.firstName + " " + this.lastName;
+    }
 }
