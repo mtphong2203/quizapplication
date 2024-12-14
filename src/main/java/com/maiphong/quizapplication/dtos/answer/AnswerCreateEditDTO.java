@@ -1,14 +1,12 @@
 package com.maiphong.quizapplication.dtos.answer;
 
-import com.maiphong.quizapplication.dtos.BaseDTO;
+import com.maiphong.quizapplication.dtos.MasterCreateEditDTO;
 
 import lombok.*;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class AnswerDTO extends BaseDTO {
+public class AnswerCreateEditDTO extends MasterCreateEditDTO {
 
     private String content;
 

@@ -52,11 +52,13 @@ public class SecurityConfiguration {
                 .addFilterBefore(corsFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JWTFilter(tokenService), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/api/manager/**").permitAll() // permit all request to /api/auth/**
-                        .requestMatchers("/swagger-ui/**").permitAll() // permit all request to /swagger-ui/**
-                        .requestMatchers("/api/categories/**").hasAnyRole("ADMIN", "USER")
-                        // /api/categories/**
-                        .anyRequest().anonymous())
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/api/manager/quizzes/**").hasRole("Admin")
+                        .requestMatchers("/api/manager/roles/**").hasRole("Admin")
+                        .requestMatchers("api/manager/auth/**").permitAll()
+                        .requestMatchers("/api/manager/users/**").hasRole("Admin")
+                        .requestMatchers("/api/manager/questions/**").hasRole("Admin")
+                        .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }

@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 
 import com.maiphong.quizapplication.dtos.quiz.QuizCreateEditDTO;
 import com.maiphong.quizapplication.dtos.quiz.QuizMasterDTO;
+import com.maiphong.quizapplication.dtos.quiz_question.QuizQuestionCreateEditDTO;
+import com.maiphong.quizapplication.dtos.quiz_question.QuizQuestionMasterDTO;
 
 public interface QuizService {
     List<QuizMasterDTO> getAll();
@@ -22,6 +24,10 @@ public interface QuizService {
 
     QuizMasterDTO update(UUID id, QuizCreateEditDTO quizDTO);
 
+    QuizQuestionMasterDTO addQuestionToQuiz(QuizQuestionCreateEditDTO masterDTO);
+
     boolean delete(UUID id);
+
+    boolean deleteQuestionFromQuiz(UUID quizId, UUID questionId);
 
 }
